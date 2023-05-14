@@ -31,6 +31,9 @@ for mx_record in mx_records:
     hostname = str(mx_record.exchange)
     # Resolve A records for the hostname
     try:
+      mailserverzone = str(mx_record.exchange).split('.', 1)[1]
+      mailservernameserver = dns.resolver.Resolver().query(mailserverzone, "NS")[0].to_text()
+      resolver.nameservers = [dns.resolver.Resolver().query(mailservernameserver, "a")[0].to_text()]
       a_records = dns.resolver.query(hostname, "A")
     except:
       all_mx_have_a_records = False
